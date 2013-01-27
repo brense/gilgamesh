@@ -29,7 +29,7 @@ class FacebookService extends Service {
 	
 	public function share(Update $update, $reply = null){
 		$parameters = array (
-			'link' => 'http://www.facebook.com/' . $update->profile->name . 'posts/' . $update->id, // example: http://www.facebook.com/rense.bakker/posts/174252586046788
+			'link' => 'http://www.facebook.com/' . $update->profile->name . 'posts/' . $update->id,
 			'message' => $reply,
 			'picture' => '',
 			'name' => '',
