@@ -30,7 +30,7 @@ class MessageView extends AbstractView {
 				$this->_vars['id'] = $update->id;
 				switch($this->_vars['state']){
 					case 'reply':
-						$this->_vars['msg'] = urlencode('@' . $update->user->screen_name . ' ');
+						$this->_vars['msg'] = urlencode('@' . $update->profile->username . ' ');
 						break;
 					case 'retweet':
 						$this->_vars['msg'] = urlencode('RT ' . $update->text);
