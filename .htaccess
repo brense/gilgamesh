@@ -1,0 +1,7 @@
+Options +FollowSymlinks
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !/pages
+RewriteCond %{REQUEST_URI} !\.(jpg|png|gif|css|js|php|pdf|xml|txt)$
+
+RewriteRule ^ index.php [QSA]
