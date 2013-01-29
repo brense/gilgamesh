@@ -100,4 +100,9 @@ abstract class Saveable extends Model {
 		return true;
 	}
 	
+	public function __toString(){
+		$arr = array('_id' => $this->_id, '_rev' => $this->_rev);
+		return json_encode($arr);
+	}
+	
 }

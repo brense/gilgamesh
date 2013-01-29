@@ -66,6 +66,7 @@ while(!$process->stop){
 								$json->_id = 'twitterupdate/' . $json->id_str;
 								$json->type = 'TwitterUpdate';
 								$json->timestamp = strtotime($json->created_at);
+								$json->service = 'service/twitter';
 								$message_docs[] = $json;
 							} else {
 								unlink(VOLUME . Config::$updates_buffer . DIRECTORY_SEPARATOR . $entry);
