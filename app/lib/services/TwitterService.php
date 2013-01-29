@@ -10,6 +10,7 @@ class TwitterService extends Service {
 	
 	protected $_oauth_version = '1.0';
 	protected $_prefix = 'twitter';
+	protected $_streaming_endpoint;
 	
 	protected $_authorize_url = 'https://api.twitter.com/oauth/authorize';
 	protected $_access_token_url = 'https://api.twitter.com/oauth/access_token';
