@@ -45,4 +45,12 @@ class TwitterService extends Service {
 		$req->execute();
 	}
 	
+	public function search($parameters){
+		$req = new OauthRequest('GET', 'https://api.twitter.com/1.1/search/tweets.json', $parameters);
+		$req->sign($this->_oauth, array('include_callback' => true));
+		$req->execute();
+		$json = $req->response;
+		return $json->statuses;
+	}
+	
 }

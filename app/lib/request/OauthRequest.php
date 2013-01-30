@@ -11,5 +11,12 @@ class OauthRequest extends Request {
 			$includeCallback = true;
 		}
 		$oauth->signRequest($this, $includeCallback);
+		
+		if($this->_method == 'GET'){
+			foreach($this->_oauth as $param => $value){
+				$this->_parameters[$param] = $value;
+			}
+		}
+		
 	}
 }

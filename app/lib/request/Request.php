@@ -6,19 +6,19 @@ use \models\Config as Config;
 
 class Request {
 	
-	private $_method;
-	private $_url;
-	private $_parameters = array();
-	private $_body;
-	private $_oauth;
-	private $_headers;
-	private $_content_type;
-	private $_ssl = false;
-	private $_user_agent;
-	private $_http_auth;
+	protected $_method;
+	protected $_url;
+	protected $_parameters = array();
+	protected $_body;
+	protected $_oauth;
+	protected $_headers;
+	protected $_content_type;
+	protected $_ssl = false;
+	protected $_user_agent;
+	protected $_http_auth;
 	
-	private $_response;
-	private $_info;
+	protected $_response;
+	protected $_info;
 	
 	public function __construct($method, $url, Array $parameters = array(), $body = null){
 		$this->_method = strtoupper($method);
@@ -60,7 +60,11 @@ class Request {
 		
 		switch($this->_method){
 			case 'GET':
-				curl_setopt($ch, CURLOPT_URL, $this->_url . http_build_query($this->_parameters));
+				$params = http_build_query($this->_parameters);
+				if(strlen($params) > 0){
+					$params = '?' . $params;
+				}
+				curl_setopt($ch, CURLOPT_URL, $this->_url . $params);
 				break;
 			case 'POST':
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($this->_body)));

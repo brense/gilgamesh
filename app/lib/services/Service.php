@@ -34,6 +34,8 @@ abstract class Service {
 	
 	abstract public function like(Update $update);
 	
+	abstract public function search($parameters);
+	
 	public function __get($property){
 		if(property_exists($this, '_' . $property)){
 			return $this->{'_' . $property};

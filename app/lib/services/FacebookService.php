@@ -2,6 +2,10 @@
 
 namespace services;
 
+use \oauth\Oauth as Oauth;
+use \models\Update as Update;
+use \request\OauthRequest as OauthRequest;
+
 class FacebookService extends Service {
 	
 	protected $_oauth_version = '2.0';
@@ -11,8 +15,8 @@ class FacebookService extends Service {
 	protected $_access_token_url = 'https://graph.facebook.com/oauth/access_token';
 	
 	public function __construct(Array $config){
-		if(isset($config['consumer_key']) && isset($config['consumer_secret']) && isset($config['callback'])){
-			$this->_oauth = new Oauth($config['consumer_key'], $config['consumer_secret'], $config['callback'], '2.0');
+		if(isset($config['consumer_key']) && isset($config['consumer_secret'])){
+			$this->_oauth = new Oauth($config['consumer_key'], $config['consumer_secret'], '', '2.0');
 		} else {
 			throw new \Exception('invalid configuration for service');
 		}
@@ -45,6 +49,14 @@ class FacebookService extends Service {
 		$req = new OauthRequest('POST', 'https://graph.facebook.com/' . $update->id . '/likes');
 		$req->sign($this->_oauth);
 		$req->execute();
+	}
+	
+	public function search($parameters){
+		$req = new OauthRequest('GET', 'https://graph.facebook.com/search', $parameters);
+		$req->sign($this->_oauth, array('include_callback' => false));
+		$req->execute();
+		$json = $req->response;
+		return $json->data;
 	}
 	
 }
