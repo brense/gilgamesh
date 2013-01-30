@@ -11,6 +11,8 @@ class FacebookService extends Service {
 	protected $_oauth_version = '2.0';
 	protected $_prefix = 'facebook';
 	
+	protected $_api_endpoint = 'https://graph.facebook.com/';
+	protected $_search_endpoint = 'https://graph.facebook.com/';
 	protected $_authorize_url = 'https://www.facebook.com/dialog/oauth';
 	protected $_access_token_url = 'https://graph.facebook.com/oauth/access_token';
 	

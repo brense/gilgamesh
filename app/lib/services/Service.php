@@ -24,10 +24,6 @@ abstract class Service {
 		}
 	}
 	
-	private function getToken(){
-		// TODO: implement this
-	}
-	
 	abstract public function reply(Update $update, $reply);
 	
 	abstract public function share(Update $update, $reply = null);
@@ -46,6 +42,10 @@ abstract class Service {
 		if(property_exists($this, '_' . $property)){
 			$this->{'_' . $property} = $value;
 		}
+	}
+	
+	private function getToken(){
+		// 
 	}
 	
 }

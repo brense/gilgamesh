@@ -1,5 +1,7 @@
 <?php
 
+// TODO: handle search results with multiple pages
+
 use models\Config as Config;
 use background_process\BackgroundProcess as BackgroundProcess;
 use storage\Storage as Storage;
@@ -49,33 +51,41 @@ while(!$process->stop){
 	
 	// loop through all events keeping in mind the rate limits (1 second interval?)
 	foreach($events as $event){
-		$labels = array();
 		foreach($event->hashtags as $hashtag => $count){
-			$labels[] = $hashtag;
-		}
-		$labels = implode(',', $labels);
-		
-		foreach($streams as $stream){
-			foreach($stream->parameters as &$param){
-				if($param == '%labels%'){
-					$param = $labels;
-				}
-			}
-			$updates = $stream->service->search((array)$stream->parameters);
-			foreach($updates as $update){
-				if(isset($update->id)){
-					if(isset($update->id_str)){
-						$id = $update->id_str;
-					} else {
-						$id = $update->id;
+			foreach($streams as $stream){
+				foreach($stream->parameters as &$param){
+					if($param == '%labels%'){
+						$param = $hashtag;
 					}
-					// insert updates in updates buffer with event id attached so they won't pass through event detection
-					$update->event = $event->id;
-					file_put_contents(VOLUME . Config::$updates_buffer . DIRECTORY_SEPARATOR . $id . '.txt', json_encode($update));
+				}
+				$url = $stream->service->search_endpoint . $stream->path . '?' . http_build_query((array)$stream->parameters);
+				$json = json_decode(file_get_contents($url));
+				
+				// facebook
+				if(isset($json->data)){
+					$updates = $json->data;
+				}
+				
+				// twitter
+				if(isset($json->statuses)){
+					$updates = $json->statuses;
+				}
+				
+				foreach($updates as $update){
+					if(isset($update->id)){
+						if(isset($update->id_str)){
+							$id = $update->id_str;
+						} else {
+							$id = $update->id;
+						}
+						// insert updates in updates buffer with event id attached so they won't pass through event detection
+						$update->event = $event->id;
+						file_put_contents(VOLUME . Config::$updates_buffer . DIRECTORY_SEPARATOR . $id . '.txt', json_encode($update));
+					}
 				}
 			}
+			sleep(10); // 10 second interval to prevent breaking rate limits? might have to be longer for some services
 		}
-		sleep(10); // 10 second interval to prevent breaking rate limits? might have to be longer for some services
 	}
 	
 }

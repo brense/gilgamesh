@@ -12,6 +12,8 @@ class TwitterService extends Service {
 	protected $_prefix = 'twitter';
 	protected $_streaming_endpoint;
 	
+	protected $_api_endpoint = 'https://api.twitter.com/1.1/';
+	protected $_search_endpoint = 'http://search.twitter.com/';
 	protected $_authorize_url = 'https://api.twitter.com/oauth/authorize';
 	protected $_access_token_url = 'https://api.twitter.com/oauth/access_token';
 	protected $_request_token_url = 'https://api.twitter.com/oauth/request_token';
