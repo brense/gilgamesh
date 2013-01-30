@@ -241,7 +241,7 @@ $('body').delegate('#settings-menu a', 'click', function(e){
 	$(e.currentTarget).parent().addClass('selected');
 });
 
-$('body').delegate('#settings table a', 'click', function(e){
+$('body').delegate('#settings table a.action', 'click', function(e){
 	e.preventDefault();
 	$.get($(e.currentTarget).attr('href'), function(response){
 		console.log(response);
