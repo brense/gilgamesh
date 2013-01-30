@@ -33,11 +33,11 @@ abstract class Saveable extends Model {
 			if(isset($parameters[0]) && is_array($parameters[0])){
 				$criteria = $parameters[0];
 			}
-			$sort = null;
+			$sort = array();
 			if(isset($parameters[1]) && is_array($parameters[1])){
 				$sort = $parameters[1];
 			}
-			$limit = null;
+			$limit = array();
 			if(isset($parameters[2]) && is_array($parameters[2])){
 				$limit = $parameters[2];
 			}

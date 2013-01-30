@@ -18,6 +18,7 @@ abstract class AbstractView implements Renderable{
 		if(!isset($this->_vars)){
 			$this->_vars = array();
 		}
+		$this->_template = str_replace('/', DIRECTORY_SEPARATOR, $this->_template);
 		$template = new Template($this->_template, $this->_vars);
 		return $template->render();
 	}

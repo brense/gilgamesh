@@ -26,7 +26,9 @@ class Template extends Model implements renderable {
 			$this->_vars['content'] = $html;
 		}
 		ob_start();
-		include(Config::$file_root . 'templates\\' . $this->_file . '.php');
+		if(file_exists(Config::$file_root . 'templates\\' . $this->_file . '.php')){
+			include(Config::$file_root . 'templates\\' . $this->_file . '.php');
+		}
 		$contents = ob_get_contents();
 		ob_end_clean();
 		return $contents;

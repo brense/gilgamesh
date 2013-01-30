@@ -65,6 +65,11 @@ class MessageListView extends AbstractView {
 			}
 		}
 		
+		if(isset($_GET['timestamp'])){
+			$this->_vars['append'] = true;
+			$q[] = 'timestamp:[' . ((int)$_GET['timestamp'] + 1) . ' TO ' . time() . ']';
+		}
+		
 		$config = Config::$db->{Config::$db_type};
 		$config->search_engine = new ElasticSearch((array)Config::$search);
 		$couch = Storage::database('CouchDB', (array)$config);
@@ -82,7 +87,9 @@ class MessageListView extends AbstractView {
 		}
 		
 		$this->_vars['messages'] = $updates;
-		$this->_vars['next'] = $skip + $limit;
+		if(!isset($_GET['timestamp'])){
+			$this->_vars['next'] = $skip + $limit;
+		}
 	}
 	
 }

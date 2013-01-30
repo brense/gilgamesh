@@ -1,5 +1,6 @@
 <?php $message = $this->_vars['message']; ?>
 <div class="message" id="message-<?php echo str_replace('/', '-', $message->id); ?>">
+	<div class="timestamp" style="display:none;"><?php echo $message->timestamp; ?></div>
 	<img src="image_cache.php?img=<?php echo $message->profile->profile_image; ?>" class="profile-picture" alt="">
 	<div class="profile">
 		<span class="source <?php echo $message->type; ?>">&nbsp;</span>

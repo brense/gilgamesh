@@ -32,9 +32,23 @@ getView('EventListView', $('#events'), function(response, target){
 	switchTab($('#event-tabs .selected a').attr('class'));
 });
 
+window.setInterval(getNewUpdates, 10000);
+
 /* DELEGATES */
 $('body').delegate('a', 'click', function(e){
 	e.preventDefault();
+});
+
+$('body').delegate('#iconbar li a', 'click', function(e){
+	e.preventDefault();
+	switch($(e.currentTarget).attr('href')){
+		case 'instellingen/': openSettings(); break;
+		case 'berichten/': openMessages(); break;
+		case 'monitor/': openMonitor(); break;
+		case '': openDashboard(); break;
+	}
+	$('#iconbar li').removeClass('selected');
+	$(e.currentTarget).parent().addClass('selected');
 });
 
 $('body').delegate('#sidebar #event-list li', 'click', function(e){
@@ -212,6 +226,33 @@ $('body').delegate('#reply-form', 'submit', function(e){
 $('body').delegate('.message-body .url', 'click', function(e){
 	e.preventDefault();
 	window.open($(e.currentTarget).attr('href'));
+});
+
+$('body').delegate('#settings-menu a', 'click', function(e){
+	e.preventDefault();
+	$('.menu li').removeClass('selected');
+	switch($(e.currentTarget).attr('href')){
+		case 'instellingen/': openSettings(); break;
+		case 'instellingen/processen/': openSettings('processes'); break;
+		case 'instellingen/bronnen/': openSettings('sources'); break;
+		case 'instellingen/gebeurtenissen/': openSettings('events'); break;
+		case 'instellingen/filters/': openSettings('filters'); break;
+	}
+	$(e.currentTarget).parent().addClass('selected');
+});
+
+$('body').delegate('#settings table a', 'click', function(e){
+	e.preventDefault();
+	$.get($(e.currentTarget).attr('href'), function(response){
+		console.log(response);
+	});
+});
+
+$('body').delegate('#settings table a.popover', 'click', function(e){
+	e.preventDefault();
+	$.get($(e.currentTarget).attr('href'), function(response){
+		popover(response);
+	});
 });
 
 /* FUNCTIONS */
@@ -463,20 +504,6 @@ function loadMapMarkers(arr){
 			ids.push(markers[n].getTitle());
 		}
 		showGeoMessages(ids);
-		/*
-		var lats = [];
-		var longs = [];
-		var markers = cluster.getMarkers();
-		for(var n = 0; n < markers.length; n++){
-			lats.push(markers[n].getPosition().lat());
-			longs.push(markers[n].getPosition().lng());
-		}
-		lats.sort();
-		longs.sort();
-		var latlng = new google.maps.LatLng(lats[0], longs[0]);
-		var latlng2 = new google.maps.LatLng(lats[lats.length-1], longs[longs.length-1]);
-		showGeoMessages(latlng2, latlng);
-		*/
 	});
 }
 
@@ -499,6 +526,72 @@ function showGeoMessages(latlng, latlng2){
 	$.get(url, function(response){
 		$('#messages').replaceWith(response);
 	});
+}
+
+function getNewUpdates(){
+	if($('#messages .message').length > 0){
+		var updates = $('#messages .message');
+		var timestamp = $(updates[0]).find('.timestamp').text();
+		if(timestamp != null && timestamp > 0){
+			$.get('do/views/MessageListView/render?timestamp='+timestamp, function(response){
+				$('#messages .scroll-container').prepend(response);
+			});
+		}
+	}
+}
+
+function openSettings(tab){
+	if(tab == null){
+		hideWindows();
+		$('body #sidebar').append('<div id="settings-menu" class="menu"></div>');
+		getView('SettingsMenuView', $('#settings-menu'), null, false);
+		$('body #main').append('<div id="settings" class="full"></div>');
+		getView('SettingsView', $('#settings'), null, false);
+	} else {
+		$('#settings > div').hide();
+		$('#settings > .' + tab).show();
+	}
+}
+
+function openMessages(){
+	hideWindows();
+	$('body #main').append('<div id="settings" class="full"></div>');
+	$('body #sidebar').append('<div id="settings-menu" class="menu"></div>');
+}
+
+function openMonitor(){
+	hideWindows();
+	$('#event-tabs').show();
+	$('#filter-list').show();
+}
+
+function openDashboard(){
+	hideWindows();
+	$('body #main').append('<div id="settings" class="full"></div>');
+	$('body #sidebar').append('<div id="settings-menu" class="menu"></div>');
+}
+
+function hideWindows(){
+	$('#event-tabs').hide();
+	$('#filter-list').hide();
+	if($('body #settings').length > 0){
+		$('body #settings').remove();
+	}
+	if($('body #inbox').length > 0){
+		$('body #inbox').remove();
+	}
+	if($('body #dashboard').length > 0){
+		$('body #dashboard').remove();
+	}
+	if($('body #settings-menu').length > 0){
+		$('body #settings-menu').remove();
+	}
+	if($('body #inbox-menu').length > 0){
+		$('body #inbox-menu').remove();
+	}
+	if($('body #dashboard-menu').length > 0){
+		$('body #dashboard-menu').remove();
+	}
 }
 
 // resize function
