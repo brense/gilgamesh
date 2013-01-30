@@ -530,12 +530,14 @@ function showGeoMessages(latlng, latlng2){
 
 function getNewUpdates(){
 	if($('#messages .message').length > 0){
-		var updates = $('#messages .message');
-		var timestamp = $(updates[0]).find('.timestamp').text();
-		if(timestamp != null && timestamp > 0){
-			$.get('do/views/MessageListView/render?timestamp='+timestamp, function(response){
-				$('#messages .scroll-container').prepend(response);
-			});
+		var updates = $('#messages .message.update');
+		if(updates[0] != null){
+			var timestamp = $(updates[0]).find('.timestamp').text();
+			if(timestamp != null && timestamp > 0){
+				$.get('do/views/MessageListView/render?timestamp='+timestamp, function(response){
+					$('#messages .scroll-container').prepend(response);
+				});
+			}
 		}
 	}
 }

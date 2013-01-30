@@ -1,9 +1,14 @@
 <?php if(!isset($this->_vars['append']) || !$this->_vars['append']){ ?>
-<div id="messages"<?php if(isset($this->_vars['size']) && $this->_vars['size'] == 'small'){ echo ' class="small"'; } ?>>
+<div id="messages">
 	<div class="scroll-container">
 		<?php }
 			foreach($this->_vars['messages'] as $message){
-				$template = new \models\Template('message/details', array('message' => $message));
+				if(isset($this->_vars['no_update'])){
+					$no_update = true;
+				} else {
+					$no_update = false;
+				}
+				$template = new \models\Template('message/details', array('message' => $message, 'no_update' => $no_update));
 				echo $template->render();
 			}
 		?>

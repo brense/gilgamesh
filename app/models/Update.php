@@ -38,7 +38,7 @@ class Update extends Saveable {
 			$arr = array($update);
 		}
 		
-		$template = new Template('message/list', array('messages' => $arr));
+		$template = new Template('message/list', array('messages' => $arr, 'no_update' => true));
 		$html = $template->render();
 		
 		echo $html;
@@ -57,7 +57,7 @@ class Update extends Saveable {
 			$updates = $db->query($obj, 'map');
 		}
 		
-		$template = new Template('message/list', array('messages' => $updates));
+		$template = new Template('message/list', array('messages' => $updates, 'no_update' => true));
 		$html = $template->render();
 		
 		echo $html;
@@ -112,7 +112,7 @@ class Update extends Saveable {
 			$updates_by_user_ids = array();
 		}
 		
-		$template = new Template('message/list', array('messages' => $updates_by_user_ids));
+		$template = new Template('message/list', array('messages' => $updates_by_user_ids, 'no_update' => true));
 		$html = $template->render();
 		
 		echo $html;
@@ -132,7 +132,7 @@ class Update extends Saveable {
 			
 		}
 			
-		$template = new Template('message/list', array('messages' => $updates));
+		$template = new Template('message/list', array('messages' => $updates, 'no_update' => true));
 		echo $template->render();
 	}
 	
